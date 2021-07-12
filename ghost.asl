@@ -14,6 +14,7 @@ state ("ghost")
 	bool plasm_bar_interface_visible : "ghost.exe", 0x54EB40, 0x4E4;
 	int game_mode : "ghost.exe", 0x55019C;
 	uint final_haunters : "ghost.exe", 0x569AA4, 0x4;
+	bool render_game : "ghost.exe", 0x535D68;
 }
 
 
@@ -27,6 +28,7 @@ state ("CompleteEdition") //In case a user is running the Complete Edition versi
 	bool plasm_bar_interface_visible : "CompleteEdition.exe", 0x54EB40, 0x4E4;
 	int game_mode : "CompleteEdition.exe", 0x55019C;
 	uint final_haunters : "CompleteEdition.exe", 0x569AA4, 0x4;
+	bool render_game : "ghost.exe", 0x535D68;
 }
 
 
@@ -74,7 +76,7 @@ split {
 	 
 	if ( ( (current.score_interface == 0) &&
 	     (current.score_interface != old.score_interface) ) || 
-		(current.final_haunters != old.final_haunters) )
+		( (current.final_haunters != old.final_haunters) && (current.render_game == true)  ) )
 	{
 		return true;
 	}
