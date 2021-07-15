@@ -17,7 +17,7 @@ state ("ghost")
 }
 
 
-state ("CompleteEdition") //In case a user is running the Complete Edition version
+state ("CompleteEdition") //In case a user is running the Complete Edition version.
 {
 	bool ProgressBarMenu : "CompleteEdition.exe", 0x551E18;
 	uint score_interface : "CompleteEdition.exe", 0x54EBB4;
