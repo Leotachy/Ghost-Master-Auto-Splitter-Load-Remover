@@ -1,32 +1,38 @@
 /*
  * Created by Woitek1993
  * https://discord.gg/EAvtUbD5
- * This script only supports Ghost Master version with bonus scenario. Currenly doesn't work on piracy protected copies.
+ * This script only supports Ghost Master version with bonus scenario. Currently does not support piracy protected versions.
 */
 
 state ("ghost")
 {
 	bool ProgressBarMenu : "ghost.exe", 0x551E18;
 	uint score_interface : "ghost.exe", 0x54EBB4;
+	uint team_selection_interface : "ghost.exe", 0x54EBC4;
 	uint main_screen_interface : "ghost.exe", 0x54EBEC;
 	uint ouija_board_interface : "ghost.exe", 0x54EBF0;
-	uint final_haunters : "ghost.exe", 0x569AA4, 0x4;
+	bool plasm_bar_interface_visible : "ghost.exe", 0x54EB40, 0x4E4;
 	int game_mode : "ghost.exe", 0x55019C;
+	uint final_haunters : "ghost.exe", 0x569AA4, 0x4;
 	int mortals_fleed : "ghost.exe", 0x550170;
 	int mortals_insane : "ghost.exe", 0x55016C;
+	uint blue_bg : "ghost.exe", 0x546D6C; 
 }
 
 
-state ("CompleteEdition") //In case a user is running the Complete Edition version.
+state ("CompleteEdition") //In case a user is running the Complete Edition version
 {
 	bool ProgressBarMenu : "CompleteEdition.exe", 0x551E18;
 	uint score_interface : "CompleteEdition.exe", 0x54EBB4;
+	uint team_selection_interface : "CompleteEdition.exe", 0x54EBC4;
 	uint main_screen_interface : "CompleteEdition.exe", 0x54EBEC;
 	uint ouija_board_interface : "CompleteEdition.exe", 0x54EBF0;
-	uint final_haunters : "CompleteEdition.exe", 0x569AA4, 0x4;
+	bool plasm_bar_interface_visible : "CompleteEdition.exe", 0x54EB40, 0x4E4;
 	int game_mode : "CompleteEdition.exe", 0x55019C;
+	uint final_haunters : "CompleteEdition.exe", 0x569AA4, 0x4;
 	int mortals_fleed : "CompleteEdition.exe", 0x550170;
 	int mortals_insane : "CompleteEdition.exe", 0x55016C;
+	uint blue_bg : "CompleteEdition.exe", 0x546D6C; 
 }
 
 
@@ -77,8 +83,8 @@ split {
 	 */
 	 
 	if ( ( (current.score_interface == 0) &&
-	     (current.score_interface != old.score_interface) ) || 
-		( (current.final_haunters != old.final_haunters) && ( (current.mortals_fleed > 0) || (current.mortals_insane > 0) ) && (vars.last_script == false) ) ) 
+	     (current.score_interface != old.score_interface) && (current.blue_bg == 0)) || 
+		( (current.final_haunters != old.final_haunters) && ( (current.mortals_fleed > 0) || (current.mortals_insane > 0) ) && (vars.last_script == false) ) )
 	{
 		if ( (current.final_haunters != old.final_haunters) && ( (current.mortals_fleed > 0) || (current.mortals_insane > 0) ) && (vars.last_script == false)   )
 		{
@@ -120,7 +126,11 @@ update
 	/* Timer is paused only when Progress Bar Menu is initialized.
 	 * Game uses a static boolean to determine if the menu is initialized.
 	 */
-	vars.timerPaused = (current.ProgressBarMenu == true);
+	vars.timerPaused = (
+					   (current.ProgressBarMenu == true) ||
+					   ( (current.team_selection_interface == 0) &&
+						 (current.team_selection_interface != old.team_selection_interface) &&
+						 (current.plasm_bar_interface_visible == false) ) );
 	
 }
 
